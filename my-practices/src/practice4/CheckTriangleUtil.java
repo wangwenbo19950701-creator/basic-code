@@ -24,7 +24,7 @@ public class CheckTriangleUtil {
 
 
     // 三角形の種類を判定する
-    public static void checkTriangleType(List<Integer> list) {
+    private static void checkTriangleType(List<Integer> list) {
         Collections.sort(list);// 昇順にソートする
         int a = list.get(0);
         int b = list.get(1);
