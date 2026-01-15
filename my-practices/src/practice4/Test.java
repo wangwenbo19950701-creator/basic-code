@@ -3,61 +3,74 @@ package practice4;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Test {
     /*
-     * 1.要求从文本文件中读取字符串，将所有可以变成数字的字符变成int类型
-     * 2.要求每3个数字为一组，判断是否为三角形（任意两边之和大于第三边）
-     * 3.要求判断是什么三角形（a，b，c三个边，假设c为长边 a²+b²=c²为直角，<为钝角，>为锐角）
-     * */
-    static int triangleCount = 0;//三角形总数
-    static int rightTriangle = 0;//直角三角形的总数
-    static int acuteTriangle = 0;//锐角三角形的总数
-    static int obtuseTriangle = 0;//钝角三角形的总数
+     * 1. テキストファイルから文字列を読み込み、数値に変換できる文字をすべて int 型に変換する
+     * 2. 3つの数値を1組として、三角形が成立するかどうかを判定する
+     *    （任意の2辺の和が残りの1辺より大きい場合）
+     * 3. 三角形の種類を判定する
+     *    （辺を a, b, c とし、c を最長辺と仮定する。
+     *     a² + b² = c² の場合は直角三角形、
+     *     a² + b² < c² の場合は鈍角三角形、
+     *     a² + b² > c² の場合は鋭角三角形）
+     */
+    static int triangleCount = 0;// 三角形の総数
+    static int rightTriangle = 0;// 直角三角形の総数
+    static int acuteTriangle = 0;// 鋭角三角形の総数
+    static int obtuseTriangle = 0;// 鈍角三角形の総数
 
     public static void main(String[] args) throws Exception {
 
-        //------------------------获取文件中的所有数字并封装到ArrayList集合-------------------------
-        File file = new File("C:\\Users\\wwb\\IdeaProjects\\basic-code\\my-practices\\src\\practice4\\sample.txt");
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        int i;
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        //获取文本文件的每一个字符并判断是否可以转换成数字
-        try (br) {
-            while ((i = br.read()) != -1) {
-                String temp = String.valueOf((char)i);
-                try {
-                    //转换成功的就加入ArrayList数组
-                    arrayList.add(Integer.parseInt(temp));
-                }catch (NumberFormatException e){
-                    //不能转换成数字的直接舍弃
-                }
+        //------------------------ファイル内のすべての数値を取得し、ArrayList に格納-------------------------
+        ArrayList<Integer> arrayList = getIntegers();
+        //------------------------ファイル内のすべての数値を取得し、ArrayList に格納-------------------------
 
-            }
-        }
-        //------------------------获取文件中的所有数字并封装到ArrayList集合-------------------------
 
         ArrayList<Integer> temp = new ArrayList<>();
 
-        //从arrayList拿出数据，三个为一组依次判断是不是三角形，是什么三角形
+        //ArrayList からデータを取り出し、3つずつ判定して三角形かどうか，また三角形の種類を判定する
 
         for (Integer integer : arrayList) {
-            //添加元素，如果不满足三个开始下一轮循环
+            // 要素を追加し、3つに満たない場合は次のループへ
             temp.add(integer);
-            //满足三个元素就开始判断
-            if(temp.size()==3){
+            // 要素が3つそろったら判定を行う
+            if (temp.size() == 3) {
                 CheckTriangleUtil.checkTriangle(temp);
-                //判断之后清空集合
+                // 判定後、集合をクリアする
                 temp.clear();
             }
 
         }
 
-        //输出一共有多少个三角形，都是什么类型的三角形
-        System.out.println("一共有 "+Test.triangleCount+" 个三角形");
-        System.out.println("直角三角形有 "+Test.rightTriangle+" 个");
-        System.out.println("锐角三角形有 "+Test.acuteTriangle+" 个");
-        System.out.println("钝角三角形有 "+Test.obtuseTriangle+" 个");
+        // 三角形の総数および各種類の三角形の数を出力する
+        System.out.println("三角形の個数 " + Test.triangleCount);
+        System.out.println("直角三角形の個数 " + Test.rightTriangle);
+        System.out.println("锐角三角形の個数 " + Test.acuteTriangle);
+        System.out.println("钝角三角形の個数 " + Test.obtuseTriangle);
+    }
+
+    private static ArrayList<Integer> getIntegers() throws IOException {
+        // 相対パス
+        File file = new File("my-practices\\src\\practice4\\sample.txt");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        int i;
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        // テキストファイル内の各文字を取得し、数値に変換できるかどうかを判定する
+        try (br) {
+            while ((i = br.read()) != -1) {
+                String temp = String.valueOf((char) i);
+                try {
+                    // 数値に変換できた場合は ArrayList に追加する
+                    arrayList.add(Integer.parseInt(temp));
+                } catch (NumberFormatException e) {
+                    // 数値に変換できない文字は無視する
+                }
+
+            }
+        }
+        return arrayList;
     }
 }
